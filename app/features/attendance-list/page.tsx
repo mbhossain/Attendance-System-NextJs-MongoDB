@@ -1,11 +1,13 @@
 import Navbar from '@/app/components/common/navbar/Navbar'
+import Home from '@/app/page'
 import React from 'react'
 
 const attendanceList = () => {
   return (
     <>
-      <Navbar />
-      <div>attendanceList</div>
+      <Home>
+        <div>attendanceList</div>
+      </Home>
     </>
   )
 }
