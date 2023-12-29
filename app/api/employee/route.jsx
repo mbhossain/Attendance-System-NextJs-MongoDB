@@ -12,7 +12,7 @@ export async function POST(request) {
 export async function GET() {
   await connectMongoDB();
   const employees = await Employee.find();
-  return NextResponse.json({ employees });
+  return NextResponse.json( employees );
 }
 
 export async function DELETE(request) {
