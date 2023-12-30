@@ -1,34 +1,80 @@
-import Home from '@/app/page'
-import Link from 'next/link'
-import React from 'react'
+'use client'
+import Home from '@/app/page';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 const employeeCreate = () => {
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobile, setMobile] = useState("");
+    const [blood_group, setBloodGroup] = useState("");
+    const [status, setStatus] = useState("");
+
+    const router = useRouter();
+
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+
+        // if (!title || !description) {
+        //     alert("Title and description are required.");
+        //     return;
+        // }
+
+        try {
+            const res = await fetch("http://localhost:3000/api/employee", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({ name, email, mobile, blood_group, status }),
+            });
+
+            if (res.ok) {
+                router.push("/features/user-list");
+            } else {
+                throw new Error("Failed to create a topic");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const resetForm = (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+        setName("");
+        setEmail("");
+        setMobile("");
+        setBloodGroup("");
+        setStatus("");
+    }
+
     return (
         <>
             <Home>
                 <h4 className="text-md font-bold">Create Employee</h4>
-                <form className="p-6">
+                <form onSubmit={handleSubmit} className="p-6">
                     <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div className="p-4">
-                            <input type="text" placeholder="Name" className="input input-bordered input-info w-full" />
+                            <input onChange={(e) => setName(e.target.value)} value={name} type="text" placeholder="Name" className="input input-bordered input-info w-full" />
                         </div>
                         <div className="p-4">
-                            <input type="text" placeholder="Mobile" className="input input-bordered input-info w-full" />
+                            <input onChange={(e) => setMobile(e.target.value)} value={mobile} type="text" placeholder="Mobile" className="input input-bordered input-info w-full" />
                         </div>
                         <div className="p-4">
-                            <input type="text" placeholder="Email" className="input input-bordered input-info w-full" />
+                            <input onChange={(e) => setEmail(e.target.value)} value={email} type="text" placeholder="Email" className="input input-bordered input-info w-full" />
                         </div>
                         <div className="p-4">
-                            <input type="text" placeholder="Blood Group" className="input input-bordered input-info w-full" />
+                            <input onChange={(e) => setBloodGroup(e.target.value)} value={blood_group} type="text" placeholder="Blood Group" className="input input-bordered input-info w-full" />
                         </div>
                         <div className="p-4">
-                            <input type="text" placeholder="Status" className="input input-bordered input-info w-full" />
+                            <input onChange={(e) => setStatus(e.target.value)} value={status} type="text" placeholder="Status" className="input input-bordered input-info w-full" />
                         </div>
                     </div>
 
                     <div className="flex justify-end mt-4 gap-2">
-                        <button className="btn btn-success btn-sm">Save</button>
-                        <button className="btn btn-error btn-sm">Reset</button>
+                        <button type="submit" className="btn btn-success btn-sm">Save</button>
+                        <button onClick={resetForm} className="btn btn-error btn-sm">Reset</button>
                         <Link href="/features/user-list" className="btn btn-warning btn-sm">Back</Link>
                     </div>
                 </form>
