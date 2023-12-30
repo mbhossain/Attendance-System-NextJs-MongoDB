@@ -1,5 +1,6 @@
 'use client'
 import Home from '@/app/page';
+import DeleteEmployee from '@/components/DeleteEmployee';
 import Link from 'next/link';
 import React from 'react';
 
@@ -63,21 +64,9 @@ const UserPage = async () => {
                                 <td>{user.status}</td>
                                 <td>
                                     <div className="flex space-x-2">
-                                        {/* <button
-                                        className="btn btn-ghost btn-sm"
-                                        onClick={() => handleEditUser(user._id)}
-                                    >
-                                        <Icon icon="edit" />
-                                    </button>
-                                    <button
-                                        className="btn btn-error btn-sm"
-                                        onClick={() => handleDeleteUser(user._id)}
-                                    >
-                                        <Icon icon="trash" />
-                                    </button> */}
                                         <button className="btn btn-info btn-xs">details</button>
                                         <button className="btn btn-warning btn-xs">edit</button>
-                                        <button className="btn btn-error btn-xs">delete</button>
+                                        <DeleteEmployee id={user._id} />
                                     </div>
                                 </td>
                             </tr>)}
