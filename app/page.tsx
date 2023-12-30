@@ -1,14 +1,20 @@
 import Navbar from './components/common/navbar/Navbar';
+import style from './styles.module.css';
 
 interface LayoutProps {
-  children: React.ReactNode; // Define children as ReactNode
+  children: React.ReactNode;
 }
 
 export default function Home({ children }: LayoutProps) {
   return (
-    <main>
+    <>
       <Navbar />
       {children}
-    </main>
+      <footer style={{ position: 'fixed', bottom: '0' }} className="footer footer-center p-4 bg-base-300 text-base-content">
+        <aside>
+          <p>Copyright © 2023 - All right reserved by Bullean IT Solutions</p>
+        </aside>
+      </footer>
+    </>
   )
 }
