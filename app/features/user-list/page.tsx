@@ -2,7 +2,7 @@
 import Home from '@/app/page';
 import DeleteEmployee from '@/components/DeleteEmployee';
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface User {
     _id: string;
@@ -13,9 +13,17 @@ interface User {
     status: string;
 }
 
-const getTopics = async () => {
+const getTopics = async (page_no?: number, limit?: number) => {
+    let filter = '';
+    if (page_no) {
+        filter += `?page_no=${page_no}`
+    }
+    if (limit) {
+        filter += `&limit=${limit}`
+    }
+
     try {
-        const res = await fetch("http://localhost:3000/api/employee", {
+        const res = await fetch(`http://localhost:3000/api/employee${filter}`, {
             cache: "no-store",
         });
 
@@ -29,8 +37,45 @@ const getTopics = async () => {
     }
 };
 
-const UserPage = async () => {
-    const users: User[] = await getTopics();
+const UserPage = () => {
+    const [users, setUsers] = React.useState([]);
+    const [res, setRes] = React.useState({ result: { data: [], page_no: 1, total: 0, limit: 0 } });
+
+    const fetchData = async (page_no?: number, limit?: number) => {
+        try {
+            const response = await getTopics(page_no, limit);
+            setRes(response);
+            setUsers(response.result.data);
+        } catch (error) {
+            console.log("Error loading topics: ", error);
+        }
+    };
+
+    React.useEffect(() => {
+        fetchData(1, 5);
+    }, []);
+
+    const previousPage = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        if (res.result.page_no > 1) {
+            await fetchData(res.result.page_no - 1, 5);
+        }
+    };
+
+    const nextPage = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        const mod = res.result.total % res.result.limit;
+        const div = res.result.total / res.result.limit;
+        
+        if (mod === 0 && res.result.page_no < div) {
+            await fetchData(res.result.page_no + 1, 5);
+        } else {
+            if (res.result.page_no < Math.ceil(div)) {
+                await fetchData(res.result.page_no + 1, 5);
+            }
+        }
+    };
+
     return (
         <>
             <Home>
@@ -54,7 +99,7 @@ const UserPage = async () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user, index) => <tr className="hover" key={user._id}>
+                            {users.map((user: User, index: number) => <tr className="hover" key={user._id}>
                                 <td>{index + 1}</td>
                                 <td></td>
                                 <td>{user.name}</td>
@@ -72,6 +117,11 @@ const UserPage = async () => {
                             </tr>)}
                         </tbody>
                     </table>
+                    <div className="text-center mt-3">
+                        <button className="join-item btn" onClick={previousPage}>«</button>
+                        <button className="join-item btn">Page {res.result.page_no}</button>
+                        <button className="join-item btn" onClick={nextPage}>»</button>
+                    </div>
                 </div>
             </Home>
         </>
