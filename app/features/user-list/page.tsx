@@ -129,13 +129,13 @@ const UserPage = () => {
                     )}
 
                     {isLoading && (
-                        <div className="flex items-center justify-center h-full">
+                        <div className="flex items-center justify-center h-full pt-20">
                             <span className="loading loading-ring loading-lg"></span>
                         </div>
                     )}
 
                     {error && (
-                        <div className="text-red-500 text-center">Error loading data. Please try again.</div>
+                        <div className="text-red-500 text-center pt-20">Error loading data. Please try again.</div>
                     )}
 
                     {!isLoading && !error && (
