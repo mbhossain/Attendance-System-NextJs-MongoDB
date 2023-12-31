@@ -28,14 +28,18 @@ export async function GET(req) {
         data: employees,
         page_no: page,
         limit: limit,
-        total: total,
-      }
+        total: total
+      },
+      status: 'OK'
     };
 
     return NextResponse.json(res);
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    let res = {
+      message: error,
+      status: 'NOK'
+    };
+    return NextResponse.json(res);
   }
 }
 

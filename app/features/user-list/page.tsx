@@ -40,14 +40,19 @@ const getTopics = async (page_no?: number, limit?: number) => {
 const UserPage = () => {
     const [users, setUsers] = React.useState([]);
     const [res, setRes] = React.useState({ result: { data: [], page_no: 1, total: 0, limit: 0 } });
+    const [isLoading, setIsLoading] = React.useState(true);
+    const [error, setError] = React.useState<Error | null>(null);
 
     const fetchData = async (page_no?: number, limit?: number) => {
+        setIsLoading(true);
         try {
             const response = await getTopics(page_no, limit);
             setRes(response);
             setUsers(response.result.data);
-        } catch (error) {
-            console.log("Error loading topics: ", error);
+        } catch (error: any) {
+            setError(error);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -66,7 +71,7 @@ const UserPage = () => {
         e.preventDefault();
         const mod = res.result.total % res.result.limit;
         const div = res.result.total / res.result.limit;
-        
+
         if (mod === 0 && res.result.page_no < div) {
             await fetchData(res.result.page_no + 1, 5);
         } else {
@@ -85,43 +90,61 @@ const UserPage = () => {
                         <h4 className="text-md font-bold">Employee List</h4>
                         <Link href="/features/user-create" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-sm">Create</Link>
                     </div>
-                    <table className='table table-bordered'>
-                        <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
-                                <th>Blood Group</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((user: User, index: number) => <tr className="hover" key={user._id}>
-                                <td>{index + 1}</td>
-                                <td></td>
-                                <td>{user.name}</td>
-                                <td>{user.mobile}</td>
-                                <td>{user.email}</td>
-                                <td>{user.blood_group}</td>
-                                <td>{user.status}</td>
-                                <td>
-                                    <div className="flex space-x-2">
-                                        <button className="btn btn-info btn-xs">details</button>
-                                        <button className="btn btn-warning btn-xs">edit</button>
-                                        <DeleteEmployee id={user._id} />
-                                    </div>
-                                </td>
-                            </tr>)}
-                        </tbody>
-                    </table>
-                    <div className="text-center mt-3">
-                        <button className="join-item btn" onClick={previousPage}>«</button>
-                        <button className="join-item btn">Page {res.result.page_no}</button>
-                        <button className="join-item btn" onClick={nextPage}>»</button>
-                    </div>
+
+                    {!isLoading && !error && (
+                        <>
+                            <table className='table table-bordered'>
+                                <thead>
+                                    <tr>
+                                        <th>SL No</th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Email</th>
+                                        <th>Blood Group</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {users.map((user: User, index: number) => <tr className="hover" key={user._id}>
+                                        <td>{index + 1}</td>
+                                        <td></td>
+                                        <td>{user.name}</td>
+                                        <td>{user.mobile}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.blood_group}</td>
+                                        <td>{user.status}</td>
+                                        <td>
+                                            <div className="flex space-x-2">
+                                                <button className="btn btn-info btn-xs">details</button>
+                                                <button className="btn btn-warning btn-xs">edit</button>
+                                                <DeleteEmployee id={user._id} />
+                                            </div>
+                                        </td>
+                                    </tr>)}
+                                </tbody>
+                            </table>
+                        </>
+                    )}
+
+                    {isLoading && (
+                        <div className="flex items-center justify-center h-full">
+                            <span className="loading loading-ring loading-lg"></span>
+                        </div>
+                    )}
+
+                    {error && (
+                        <div className="text-red-500 text-center">Error loading data. Please try again.</div>
+                    )}
+
+                    {!isLoading && !error && (
+                        <div className="text-center mt-3">
+                            <button className="join-item btn" onClick={previousPage}>«</button>
+                            <button className="join-item btn">Page {res.result.page_no}</button>
+                            <button className="join-item btn" onClick={nextPage}>»</button>
+                        </div>
+                    )}
                 </div>
             </Home>
         </>
