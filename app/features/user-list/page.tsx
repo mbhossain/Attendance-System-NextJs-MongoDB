@@ -85,7 +85,7 @@ const UserPage = () => {
         <>
             <Home>
                 {/* <EmployeeList /> */}
-                <div className='p-6'>
+                <div className='p-10'>
                     <div className="flex justify-between items-center mb-6">
                         <h4 className="text-md font-bold">Employee List</h4>
                         <Link href="/features/user-create" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-sm">Create</Link>
