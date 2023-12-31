@@ -12,7 +12,7 @@ export default function Home({ children }: LayoutProps) {
       {children}
       <footer style={{ position: 'fixed', bottom: '0' }} className="footer footer-center p-4 bg-base-300 text-base-content">
         <aside>
-          <p>Copyright © 2023 - All right reserved by Bullean IT Solutions</p>
+          <p style={{ color: 'teal' }}>Copyright <span style={{ color: 'red' }}>©</span> 2023 - All right reserved by Bullean IT Solutions</p>
         </aside>
       </footer>
     </>
