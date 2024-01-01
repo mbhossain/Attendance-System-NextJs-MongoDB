@@ -4,15 +4,56 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
-const employeeCreate = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [blood_group, setBloodGroup] = useState("");
-    const [status, setStatus] = useState("");
+const getEmployeeById = async (id: string) => {
+    try {
+        const res = await fetch(`http://localhost:3000/api/employee/${id}`, {
+            cache: "no-store",
+        });
 
-    const [isCreate, setIsCreate] = React.useState(false);
+        if (!res.ok) {
+            throw new Error("Failed to fetch employee");
+        }
 
+        return res.json();
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const employeeUpdate = ({ params }: any) => {
+    const { id } = params;
+    const [employee, setEmployee] = useState<any>(null);
+
+    const fetchData = async (id: string) => {
+        try {
+            const { employee: fetchedEmployee } = await getEmployeeById(id);
+            setEmployee(fetchedEmployee);
+        } catch (error: any) {
+            console.log(error);
+        } finally { }
+    };
+
+    React.useEffect(() => {
+        fetchData(id);
+    }, []);
+
+    React.useEffect(() => {
+        if (employee) {
+            setName(employee.name || '');
+            setEmail(employee.email || '');
+            setMobile(employee.mobile || '');
+            setBloodGroup(employee.blood_group || '');
+            setStatus(employee.status || '');
+        }
+    }, [employee]);
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [blood_group, setBloodGroup] = useState('');
+    const [status, setStatus] = useState('');
+
+    const [isUpdate, setIsUpdate] = React.useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -22,10 +63,10 @@ const employeeCreate = () => {
         //     alert("Title and description are required.");
         //     return;
         // }
-        setIsCreate(false);
+        setIsUpdate(false);
         try {
-            const res = await fetch("http://localhost:3000/api/employee", {
-                method: "POST",
+            const res = await fetch(`http://localhost:3000/api/employee/${id}`, {
+                method: "PUT",
                 headers: {
                     "Content-type": "application/json",
                 },
@@ -34,12 +75,12 @@ const employeeCreate = () => {
 
             if (res.ok) {
                 resetForm();
-                setIsCreate(true);
+                setIsUpdate(true);
                 setTimeout(() => {
                     router.push("/features/user-list");
                 }, 1000)
             } else {
-                throw new Error("Failed to create employee");
+                throw new Error("Failed to update employee");
             }
         } catch (error) {
             console.log(error);
@@ -51,18 +92,20 @@ const employeeCreate = () => {
             e.preventDefault();
         }
 
-        setName("");
-        setEmail("");
-        setMobile("");
-        setBloodGroup("");
-        setStatus("");
+        if (employee) {
+            setName(employee.name || '');
+            setEmail(employee.email || '');
+            setMobile(employee.mobile || '');
+            setBloodGroup(employee.blood_group || '');
+            setStatus(employee.status || '');
+        }
     }
 
     return (
         <>
             <Home>
                 <div className='p-10'>
-                    <h4 className="text-md font-bold">Create Employee</h4>
+                    <h4 className="text-md font-bold">Update Employee</h4>
                     <form onSubmit={handleSubmit} className="p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                             <div className="p-4">
@@ -83,16 +126,16 @@ const employeeCreate = () => {
                         </div>
 
                         <div className="flex justify-end mt-4 gap-2">
-                            <button type="submit" className="btn btn-success btn-sm">Save</button>
+                            <button type="submit" className="btn btn-success btn-sm">Update</button>
                             <button onClick={resetForm} className="btn btn-error btn-sm">Reset</button>
                             <Link href="/features/user-list" className="btn btn-warning btn-sm">Back</Link>
                         </div>
                     </form>
 
-                    {isCreate && (
+                    {isUpdate && (
                         <div className="toast toast-center toast-middle">
                             <div className="alert alert-success">
-                                <span>Created successfully.</span>
+                                <span>Updated successfully.</span>
                             </div>
                         </div>
                     )}
@@ -102,4 +145,4 @@ const employeeCreate = () => {
     )
 }
 
-export default employeeCreate
+export default employeeUpdate

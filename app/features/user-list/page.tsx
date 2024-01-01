@@ -46,6 +46,8 @@ const UserPage = () => {
     const fetchData = async (page_no?: number, limit?: number) => {
         setIsLoading(true);
         try {
+            page_no = page_no ? page_no : 1;
+            limit = limit ? limit : 5;
             const response = await getTopics(page_no, limit);
             setRes(response);
             setUsers(response.result.data);
@@ -85,7 +87,7 @@ const UserPage = () => {
         <>
             <Home>
                 {/* <EmployeeList /> */}
-                <div className='p-6'>
+                <div className='p-10'>
                     <div className="flex justify-between items-center mb-6">
                         <h4 className="text-md font-bold">Employee List</h4>
                         <Link href="/features/user-create" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-sm">Create</Link>
@@ -117,9 +119,9 @@ const UserPage = () => {
                                         <td>{user.status}</td>
                                         <td>
                                             <div className="flex space-x-2">
-                                                <button className="btn btn-info btn-xs">details</button>
-                                                <button className="btn btn-warning btn-xs">edit</button>
-                                                <DeleteEmployee id={user._id} />
+                                                <Link href={`/features/user-details/${user._id}`} className="btn btn-info btn-xs">details</Link>
+                                                <Link href={`/features/user-edit/${user._id}`} className="btn btn-warning btn-xs">edit</Link>
+                                                <DeleteEmployee id={user._id} onDelete={fetchData} />
                                             </div>
                                         </td>
                                     </tr>)}
@@ -129,13 +131,13 @@ const UserPage = () => {
                     )}
 
                     {isLoading && (
-                        <div className="flex items-center justify-center h-full">
+                        <div className="flex items-center justify-center h-full pt-20">
                             <span className="loading loading-ring loading-lg"></span>
                         </div>
                     )}
 
                     {error && (
-                        <div className="text-red-500 text-center">Error loading data. Please try again.</div>
+                        <div className="text-red-500 text-center pt-20">Error loading data. Please try again.</div>
                     )}
 
                     {!isLoading && !error && (
