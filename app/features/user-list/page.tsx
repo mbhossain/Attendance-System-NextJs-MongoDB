@@ -120,7 +120,7 @@ const UserPage = () => {
                                         <td>
                                             <div className="flex space-x-2">
                                                 <button className="btn btn-info btn-xs">details</button>
-                                                <button className="btn btn-warning btn-xs">edit</button>
+                                                <Link href={`/features/user-edit/${user._id}`} className="btn btn-warning btn-xs">edit</Link>
                                                 <DeleteEmployee id={user._id} onDelete={fetchData} />
                                             </div>
                                         </td>
