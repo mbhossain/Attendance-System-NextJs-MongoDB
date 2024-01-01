@@ -46,6 +46,8 @@ const UserPage = () => {
     const fetchData = async (page_no?: number, limit?: number) => {
         setIsLoading(true);
         try {
+            page_no = page_no ? page_no : 1;
+            limit = limit ? limit : 5;
             const response = await getTopics(page_no, limit);
             setRes(response);
             setUsers(response.result.data);
@@ -119,7 +121,7 @@ const UserPage = () => {
                                             <div className="flex space-x-2">
                                                 <button className="btn btn-info btn-xs">details</button>
                                                 <button className="btn btn-warning btn-xs">edit</button>
-                                                <DeleteEmployee id={user._id} />
+                                                <DeleteEmployee id={user._id} onDelete={fetchData} />
                                             </div>
                                         </td>
                                     </tr>)}

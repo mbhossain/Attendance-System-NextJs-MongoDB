@@ -3,11 +3,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useRef } from 'react';
 
-interface UserID {
+interface DeleteEmployeeProps {
     id: string;
+    onDelete: () => Promise<void>;
 }
 
-export default function DeleteEmployee({ id }: UserID) {
+export default function DeleteEmployee({ id, onDelete }: DeleteEmployeeProps) {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const modalRef = useRef<HTMLDialogElement>(null)
@@ -29,6 +30,7 @@ export default function DeleteEmployee({ id }: UserID) {
 
         if (res.ok) {
             setIsModalOpen(false);
+            onDelete();
             router.refresh();
         }
     };
@@ -59,7 +61,11 @@ export default function DeleteEmployee({ id }: UserID) {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6v2M10 14h.01" />
                             </svg>
                         </div>
-                        <p className="py-4 text-center">Are you sure you want to delete?</p>
+                        <p className="py-4 text-center">Are you sure want to delete?</p>
+                        <div className="flex justify-center">
+                            <button onClick={confirmDelete} className="btn btn-success btn-xs mx-2">Yes</button>
+                            <button onClick={closeModal} className="btn btn-error btn-xs">No</button>
+                        </div>
                     </div>
                 </dialog>
             )}
