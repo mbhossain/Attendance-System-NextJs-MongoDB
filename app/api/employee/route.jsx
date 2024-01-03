@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 import url from 'url';
 
 export async function POST(request) {
-  const { name, mobile, email, blood_group, status } = await request.json();
+  const { name, mobile, email, blood_group, status, fileName } = await request.json();
   await connectMongoDB();
-  await Employee.create({ name, mobile, email, blood_group, status });
+  await Employee.create({ name, mobile, email, blood_group, status, fileName });
   return NextResponse.json({ message: "Employee Created" }, { status: 201 });
 }
 
