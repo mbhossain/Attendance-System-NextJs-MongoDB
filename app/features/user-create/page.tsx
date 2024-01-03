@@ -1,5 +1,6 @@
 'use client'
 import Home from '@/app/page';
+import ImageUploader from '@/components/ImageUploader';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -63,6 +64,7 @@ const employeeCreate = () => {
             <Home>
                 <div className='p-10'>
                     <h4 className="text-md font-bold">Create Employee</h4>
+                    <ImageUploader />
                     <form onSubmit={handleSubmit} className="p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                             <div className="p-4">
