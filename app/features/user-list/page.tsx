@@ -11,6 +11,7 @@ interface User {
     mobile: string;
     blood_group: string;
     status: string;
+    fileName: string;
 }
 
 const getTopics = async (page_no?: number, limit?: number) => {
@@ -112,13 +113,24 @@ const UserPage = () => {
                                     {users.map((user: User, index: number) => <tr className="hover" key={user._id}>
                                         <td>{index + 1}</td>
                                         <td>
-                                            <div className="flex items-center gap-3">
-                                                <div className="avatar">
-                                                    <div className="mask mask-squircle w-12 h-12">
-                                                        <img src="/images/profile-demo.png" alt="Not Found" />
+                                            {!user.fileName && (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="avatar">
+                                                        <div className="mask mask-squircle w-12 h-12">
+                                                            <img src="/images/profile-demo.png" alt="Not Found" />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            )}
+                                            {user.fileName && (
+                                                <div className="flex items-center gap-3">
+                                                    <div className="avatar">
+                                                        <div className="mask mask-squircle w-12 h-12">
+                                                            <img src={`/api/uploads/${user.fileName}`} alt="Not Found" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </td>
                                         <td>{user.name}</td>
                                         <td>{user.mobile}</td>

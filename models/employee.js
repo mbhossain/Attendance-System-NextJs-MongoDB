@@ -7,6 +7,7 @@ const employeeSchema = new Schema(
     email: String,
     blood_group: String,
     status: String,
+    fileName: String
   },
   {
     timestamps: true,
