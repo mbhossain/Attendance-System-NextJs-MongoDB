@@ -41,6 +41,11 @@ const employeeDetails = ({ params }: any) => {
             <Home>
                 <div className='p-10'>
                     <h4 className="text-md font-bold">Employee Details</h4>
+                    {employee?.fileName && (
+                        <div className="relative aspect-video max-h-[100px] mt-5 ml-10">
+                            <img src={`/api/uploads/${employee?.fileName}`} alt="Not Found" />
+                        </div>
+                    )}
                     <div className="grid grid-cols-3 gap-4 mt-10 ml-10">
                         <div>
                             <strong>Name:</strong> {employee?.name}

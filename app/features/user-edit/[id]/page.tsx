@@ -1,5 +1,6 @@
 'use client'
 import Home from '@/app/page';
+import ImageUploader from '@/components/ImageUploader';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -52,6 +53,7 @@ const employeeUpdate = ({ params }: any) => {
     const [mobile, setMobile] = useState('');
     const [blood_group, setBloodGroup] = useState('');
     const [status, setStatus] = useState('');
+    const [fileName, setFileName] = useState("");
 
     const [isUpdate, setIsUpdate] = React.useState(false);
     const router = useRouter();
@@ -70,7 +72,7 @@ const employeeUpdate = ({ params }: any) => {
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({ name, email, mobile, blood_group, status }),
+                body: JSON.stringify({ name, email, mobile, blood_group, status, fileName }),
             });
 
             if (res.ok) {
@@ -101,11 +103,16 @@ const employeeUpdate = ({ params }: any) => {
         }
     }
 
+    const getFileName = async (filename?: any) => {
+        setFileName(filename);
+    };
+
     return (
         <>
             <Home>
                 <div className='p-10'>
                     <h4 className="text-md font-bold">Update Employee</h4>
+                    <ImageUploader fileName={getFileName} />
                     <form onSubmit={handleSubmit} className="p-6">
                         <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                             <div className="p-4">
