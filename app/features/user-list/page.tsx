@@ -94,11 +94,19 @@ const UserPage = () => {
         await fetchData(1, 5, searchInput);
     };
 
+    const resetSearch = async (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (e) {
+            e.preventDefault();
+        }
+        setSearchInput("");
+        await fetchData(1, 5);
+    }
+
     return (
         <>
             <Home>
                 {/* <EmployeeList /> */}
-                <div className='pl-10 pr-10'>
+                <div className='pl-10 pr-10 pb-20'>
                     <div className="flex justify-between items-center mb-6">
                         <h4 className="text-md font-bold">Employee List</h4>
                         <Link href="/features/user-create" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-sm">Create</Link>
@@ -138,7 +146,7 @@ const UserPage = () => {
                             )}
                             Search
                         </button>
-                        <button className="btn btn-outline btn-xs btn-warning ml-2">Reset</button>
+                        <button className="btn btn-outline btn-xs btn-warning ml-2" onClick={resetSearch}>Reset</button>
                     </div>
                     {!isLoading && !error && (
                         <>
