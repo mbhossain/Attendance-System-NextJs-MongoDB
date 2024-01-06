@@ -25,11 +25,11 @@ const ImageUploader = ({ fileName }: FileNameProps) => {
             fileName(file.name);
         }
 
-
         // 4. use axios to send the FormData
         await axios.post("/api/upload", formData);
         setUrls(files.map((file) => `/api/uploads/${file.name}`));
     };
+
     return (
         <>
             <form onSubmit={handleSubmit} className="mt-5 ml-10">

@@ -17,9 +17,14 @@ export async function GET(req) {
     const page = parsedUrl.query?.page_no ? parseInt(parsedUrl.query.page_no) : 1;
     const limit = parsedUrl.query?.limit ? parseInt(parsedUrl.query.limit) : 10;
     const skip = (page - 1) * limit;
-    const total = await Employee.countDocuments();
+    let query = {};
 
-    const employees = await Employee.find()
+    if (parsedUrl.query?.name) {
+      query.name = { $regex: new RegExp(parsedUrl.query.name, 'i') }; // Case-insensitive name search
+    }
+
+    const total = await Employee.countDocuments(query);
+    const employees = await Employee.find(query)
       .skip(skip)
       .limit(limit);
 
@@ -42,6 +47,7 @@ export async function GET(req) {
     return NextResponse.json(res);
   }
 }
+
 
 export async function DELETE(request) {
   const id = request.nextUrl.searchParams.get("id");
